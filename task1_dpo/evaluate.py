@@ -15,7 +15,7 @@ from common.models import load_policy, load_reward_model, load_tokenizer, refere
 from task1_dpo.dpo import dpo_loss
 from task1_dpo.train import make_collate
 
-GENERATION_BATCH_SIZE = 8
+GENERATION_BATCH_SIZE = 2
 
 
 def load_evaluation_bundle(config_path: str, adapter: str):
