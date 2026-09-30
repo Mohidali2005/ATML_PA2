@@ -1,0 +1,10 @@
+{
+  "name": "beta_0.3",
+  "beta": 0.3,
+  "dpo_loss": 0.6789741309483847,
+  "preference_accuracy": 0.49666666666666665,
+  "mean_kl": -0.00035950854893493784,
+  "mean_reward": 1.1116756693522136,
+  "mean_response_length": 154.42333333333335,
+  "std_response_length": 106.12101954320308
+}

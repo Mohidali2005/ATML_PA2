@@ -1,0 +1,10 @@
+{
+  "standard": {
+    "mean_length": 45.1,
+    "compliance_rate": 0.6
+  },
+  "length_balanced": {
+    "mean_length": 49.5,
+    "compliance_rate": 0.4
+  }
+}
