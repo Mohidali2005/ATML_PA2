@@ -1,0 +1,13 @@
+{
+  "run_name": "eps_0.2_kl_0.0",
+  "updates": 8,
+  "clip_epsilon": 0.2,
+  "kl_beta": 0.0,
+  "wall_clock_seconds": 115.397954454,
+  "peak_vram_gb": 9.630599168,
+  "mean_clip_fraction": 0.0,
+  "peak_policy_grad_norm": 1.3756576180458069,
+  "mean_post_update_ratio_deviation": 0.0027171262627234682,
+  "max_post_update_ratio_deviation": 0.005102700088173151,
+  "mean_critic_explained_variance": -12.355709104920336
+}

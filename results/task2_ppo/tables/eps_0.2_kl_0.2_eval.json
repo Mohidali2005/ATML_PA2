@@ -1,0 +1,12 @@
+{
+  "name": "eps_0.2_kl_0.2",
+  "n_prompts": 64,
+  "mean_reward": 1.6175179481506348,
+  "std_reward": 1.2697126040376996,
+  "mean_kl": 2.2324371347084065e-06,
+  "mean_entropy": 0.7787978745499105,
+  "mean_response_length": 298.84375,
+  "std_response_length": 268.66116082518795,
+  "truncation_rate": 0.15625,
+  "reward_length_correlation": 0.3645984846680754
+}
