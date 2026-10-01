@@ -1,0 +1,7 @@
+{
+  "n_sequences": 32,
+  "n_tokens": 8814,
+  "inner_steps": 10,
+  "learning_rate": 3e-06,
+  "kl_beta": 0.1
+}
