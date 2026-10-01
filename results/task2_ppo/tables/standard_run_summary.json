@@ -1,0 +1,13 @@
+{
+  "run_name": "standard",
+  "updates": 20,
+  "clip_epsilon": 0.2,
+  "kl_beta": 0.1,
+  "wall_clock_seconds": 329.20810059,
+  "peak_vram_gb": 9.631709696,
+  "mean_clip_fraction": 0.0,
+  "peak_policy_grad_norm": 0.8104663193225861,
+  "mean_post_update_ratio_deviation": 0.0025914259895216674,
+  "max_post_update_ratio_deviation": 0.004474861081689596,
+  "mean_critic_explained_variance": -5.573472868115481
+}

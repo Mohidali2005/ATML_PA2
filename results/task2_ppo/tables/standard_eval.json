@@ -1,0 +1,12 @@
+{
+  "name": "standard",
+  "n_prompts": 64,
+  "mean_reward": 1.5894880294799805,
+  "std_reward": 1.447932155724431,
+  "mean_kl": -7.807387896454892e-09,
+  "mean_entropy": 0.798743357307778,
+  "mean_response_length": 298.78125,
+  "std_response_length": 275.6702326121511,
+  "truncation_rate": 0.09375,
+  "reward_length_correlation": 0.38440535236848694
+}
