@@ -1,0 +1,12 @@
+{
+  "name": "midpoint",
+  "n_prompts": 64,
+  "mean_reward": 1.510457992553711,
+  "std_reward": 1.415242314188863,
+  "mean_kl": 4.620881376916666e-05,
+  "mean_entropy": 0.7979096397060056,
+  "mean_response_length": 300.4375,
+  "std_response_length": 267.23256929826124,
+  "truncation_rate": 0.140625,
+  "reward_length_correlation": 0.2338395248683409
+}

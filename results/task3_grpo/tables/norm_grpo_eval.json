@@ -1,0 +1,12 @@
+{
+  "name": "norm_grpo",
+  "n_prompts": 64,
+  "mean_reward": 1.5800304412841797,
+  "std_reward": 1.4037056799967678,
+  "mean_kl": -6.972649580062764e-06,
+  "mean_entropy": 0.7739456836299486,
+  "mean_response_length": 316.9375,
+  "std_response_length": 280.9601214474218,
+  "truncation_rate": 0.125,
+  "reward_length_correlation": 0.3336225197793182
+}

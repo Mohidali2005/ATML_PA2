@@ -1,0 +1,13 @@
+{
+  "run_name": "standard",
+  "loss_type": "grpo",
+  "updates": 20,
+  "num_generations": 4,
+  "wall_clock_seconds": 447.538898818,
+  "peak_vram_gb": 9.876338688,
+  "mean_group_reward_std": 0.7309441395103932,
+  "uninformative_fraction": 0.0,
+  "mean_clip_fraction": 0.0,
+  "peak_grad_norm": 0.9746190309524536,
+  "mean_grad_norm": 0.2582276651635766
+}

@@ -1,0 +1,13 @@
+{
+  "run_name": "norm_dr_grpo",
+  "loss_type": "dr_grpo",
+  "updates": 8,
+  "num_generations": 4,
+  "wall_clock_seconds": 204.68501409999953,
+  "peak_vram_gb": 9.83546624,
+  "mean_group_reward_std": 0.7546328939497471,
+  "uninformative_fraction": 0.0,
+  "mean_clip_fraction": 0.0,
+  "peak_grad_norm": 0.10369046777486801,
+  "mean_grad_norm": 0.06484102737158537
+}

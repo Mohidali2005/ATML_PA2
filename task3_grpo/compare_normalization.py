@@ -105,7 +105,7 @@ def plot_norm_trajectories(fork_rows, tables_dir, figures_dir):
 
 def plot_gradient_allocation(trained, stats, figures_dir):
     """Plot each completion's normalized gradient norm against its length"""
-    fig,axes = plt.subplots(1,2,figsize=(12,4.5),sharex=True)
+    fig,axes = plt.subplots(1,2,figsize=(12,4.5))
     for name,frame in trained.items():
         informative = frame[frame["abs_advantage"] > 1e-6]
         axes[0].scatter(informative["response_length"],informative["normalized_grad"],s=22,color=LOSS_COLORS[name],alpha=0.7)
