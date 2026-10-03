@@ -98,24 +98,61 @@ def render_prompt(tokenizer, messages: list[dict]) -> str:
     )
 
 
-def encode_prompt_response(tokenizer, messages: list[dict], response: str, max_length: int):
+def encode_prompt_response(
+    tokenizer,
+    messages: list[dict],
+    response: str,
+    max_length: int,
+):
+    """
+    Encode prompt + response for DPO.
+
+    The prompt is kept intact for both chosen and rejected responses.
+    If the combined sequence exceeds max_length, truncate the RESPONSE
+    from the right rather than removing prompt/question tokens.
+    """
+
     prompt_ids = tokenizer.apply_chat_template(
         messages,
         tokenize=True,
         add_generation_prompt=True,
     )
+
+    # A DPO example is meaningful only if we can condition on the prompt.
+    if len(prompt_ids) >= max_length:
+        raise ValueError(
+            f"Prompt alone has {len(prompt_ids)} tokens, which does not fit "
+            f"inside max_length={max_length}. "
+            "Increase max_length or filter this example."
+        )
+
     response_ids = tokenizer(
-        response + (tokenizer.eos_token or ""),
+        response,
         add_special_tokens=False,
     )["input_ids"]
 
-    # Prefer truncating prompt context; keep the response tokens intact whenever possible.
-    if len(prompt_ids) + len(response_ids) > max_length:
-        keep_prompt = max(1, max_length - len(response_ids))
-        prompt_ids = prompt_ids[-keep_prompt:]
-    ids = (prompt_ids + response_ids)[-max_length:]
-    response_start = max(0, len(ids) - min(len(response_ids), len(ids)))
-    response_mask = [0] * response_start + [1] * (len(ids) - response_start)
+    response_budget = max_length - len(prompt_ids)
+
+    # Keep an EOS token when the tokenizer defines one.
+    eos_id = tokenizer.eos_token_id
+
+    if eos_id is not None:
+        # Reserve one token for EOS.
+        content_budget = max(0, response_budget - 1)
+        response_ids = response_ids[:content_budget] + [eos_id]
+    else:
+        response_ids = response_ids[:response_budget]
+
+    ids = prompt_ids + response_ids
+
+    response_mask = (
+        [0] * len(prompt_ids)
+        + [1] * len(response_ids)
+    )
+
+    assert len(ids) <= max_length
+    assert len(ids) == len(response_mask)
+
     return ids, response_mask
 
 

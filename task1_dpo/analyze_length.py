@@ -10,7 +10,7 @@ from common.generation import batch_generate, response_sequence_logprobs
 from common.logging_utils import save_json
 from common.metrics import word_limit_compliance
 from common.models import load_policy, load_tokenizer
-from task1_dpo.train import make_collate, run_training
+from task1_dpo.train import fitting_rows, make_collate, run_training
 
 MODEL_COLORS = {"standard":"steelblue","length_balanced":"darkorange"}
 STRATA = ["preferred_longer","length_matched","rejected_longer"]
@@ -111,16 +111,14 @@ def main():
     ap.add_argument("--config", default="configs/dpo.yaml")
     args = ap.parse_args()
     cfg = load_yaml(args.config)
-    balanced = read_jsonl(cfg["paths"]["dpo_length_train"])
-    stratified = read_jsonl(cfg["paths"]["dpo_length_eval"])
-    print("Length-balanced train rows:", len(balanced))
+    tokenizer = load_tokenizer(cfg["base_model"])
+    max_length = int(cfg["max_sequence_length"])
+    stratified = fitting_rows(tokenizer,read_jsonl(cfg["paths"]["dpo_length_eval"]),max_length)
     print("Length-stratified eval rows:", len(stratified))
 
     run_training(args.config,"length_balanced",dataset_path=cfg["paths"]["dpo_length_train"],output_path=cfg["length_output"])
 
-    tokenizer = load_tokenizer(cfg["base_model"])
     word_limit_rows = read_jsonl(cfg["paths"]["word_limit_prompts"])
-    max_length = int(cfg["max_sequence_length"])
 
     policies = {"standard":cfg["standard_output"],"length_balanced":cfg["length_output"]}
     per_stratum = {}

@@ -36,15 +36,26 @@ def make_collate(tokenizer, max_length):
     return collate
 
 
+def fitting_rows(tokenizer, rows, max_length):
+    """Keep only the pairs whose prompt fits inside the sequence limit"""
+    kept = []
+    for row in rows:
+        prompt = prompt_messages_from_preference(row)
+        if len(tokenizer.apply_chat_template(prompt,tokenize=True,add_generation_prompt=True)) < max_length:
+            kept.append(row)
+    print(f"kept {len(kept)} of {len(rows)} pairs with a prompt that fits")
+    return kept
+
+
 def prepare_dpo_run(config_path: str, dataset_path: str | None = None, beta: float | None = None, max_examples: int | None = None):
     cfg = load_yaml(config_path)
     set_seed(int(cfg["seed"]))
     path = dataset_path or cfg["paths"]["dpo_standard_train"]
-    rows = read_jsonl(path)
+    tokenizer = load_tokenizer(cfg["base_model"])
+    rows = fitting_rows(tokenizer,read_jsonl(path),int(cfg["max_sequence_length"]))
     if max_examples is not None:
         rows = rows[: int(max_examples)]
 
-    tokenizer = load_tokenizer(cfg["base_model"])
     model = load_policy(cfg, trainable=True, fresh_lora=True)
     loader = DataLoader(
         rows,

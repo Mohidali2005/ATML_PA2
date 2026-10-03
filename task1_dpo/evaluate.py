@@ -13,17 +13,18 @@ from common.logging_utils import save_json
 from common.metrics import sampled_kl
 from common.models import load_policy, load_reward_model, load_tokenizer, reference_mode
 from task1_dpo.dpo import dpo_loss
-from task1_dpo.train import make_collate
+from task1_dpo.train import fitting_rows, make_collate
 
 GENERATION_BATCH_SIZE = 4
 
 
 def load_evaluation_bundle(config_path: str, adapter: str):
     cfg = load_yaml(config_path)
+    tokenizer = load_tokenizer(cfg["base_model"])
     return {
         "cfg": cfg,
-        "rows": read_jsonl(cfg["paths"]["dpo_standard_eval"]),
-        "tokenizer": load_tokenizer(cfg["base_model"]),
+        "rows": fitting_rows(tokenizer,read_jsonl(cfg["paths"]["dpo_standard_eval"]),int(cfg["max_sequence_length"])),
+        "tokenizer": tokenizer,
         "policy": load_policy(cfg, adapter_path=adapter, trainable=False),
         "reward": load_reward_model(cfg),
     }
