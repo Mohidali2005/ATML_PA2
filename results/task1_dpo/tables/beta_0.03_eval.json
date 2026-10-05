@@ -1,10 +1,10 @@
 {
   "name": "beta_0.03",
   "beta": 0.03,
-  "dpo_loss": 0.6914079125722249,
-  "preference_accuracy": 0.49666666666666665,
-  "mean_kl": -0.0003552942944820682,
-  "mean_reward": 1.1129653612772623,
-  "mean_response_length": 151.03333333333333,
-  "std_response_length": 106.10092155846506
+  "dpo_loss": 0.6909997056270468,
+  "preference_accuracy": 0.5,
+  "mean_kl": 2.664078320768559e-05,
+  "mean_reward": 1.302527565791689,
+  "mean_response_length": 153.10344827586206,
+  "std_response_length": 106.11722367515647
 }
