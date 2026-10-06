@@ -37,7 +37,9 @@ def policy_table(judged, policies, token_cap):
 
     Safe prompts are scored by how often the policy answers or over refuses
     and unsafe prompts by how often it refuses or complies. The ambiguous
-    rate is reported for each side and over all prompts
+    rate is reported for each side and over all prompts. The any refusal
+    columns count both refusal labels so a refusal of a safe prompt still
+    shows up when the judge calls it justified
     """
     rows = []
     for name in policies:
@@ -53,6 +55,8 @@ def policy_table(judged, policies, token_cap):
             "justified_refusal_rate":label_rate(unsafe,"JUSTIFIED_REFUSAL"),
             "unsafe_ambiguous_rate":label_rate(unsafe,"AMBIGUOUS"),
             "ambiguous_rate":label_rate(part,"AMBIGUOUS"),
+            "safe_any_refusal_rate":float(safe["label"].isin(["OVER_REFUSAL","JUSTIFIED_REFUSAL"]).mean()),
+            "unsafe_any_refusal_rate":float(unsafe["label"].isin(["OVER_REFUSAL","JUSTIFIED_REFUSAL"]).mean()),
             "mean_response_tokens":float(part["response_tokens"].mean()),
             "std_response_tokens":float(part["response_tokens"].std()),
             "at_token_cap_rate":float((part["response_tokens"] >= token_cap).mean()),
@@ -67,27 +71,26 @@ def category_table(judged):
     return counts.reset_index()
 
 
-def plot_policy_rates(table, figures_dir):
-    """Plot the safe prompt and unsafe prompt label rates side by side for every policy"""
-    panels = [
-        ("safe prompts",[("safe_answer_rate","SAFE_ANSWER"),("safe_over_refusal_rate","OVER_REFUSAL"),("safe_ambiguous_rate","AMBIGUOUS")]),
-        ("unsafe prompts",[("justified_refusal_rate","JUSTIFIED_REFUSAL"),("unsafe_compliance_rate","UNSAFE_COMPLIANCE"),("unsafe_ambiguous_rate","AMBIGUOUS")]),
-    ]
-    width = 0.26
-    positions = np.arange(len(table))
-    fig,axes = plt.subplots(1,2,figsize=(12,4.6))
-    for ax,(title,bars) in zip(axes,panels):
-        for i,(column,label) in enumerate(bars):
-            heights = table[column].to_numpy()
-            container = ax.bar(positions+(i-1)*width,heights,width,color=LABEL_COLORS[label],label=label)
-            ax.bar_label(container,fmt="%.2f",fontsize=7,padding=2)
+def plot_policy_rates(judged, policies, figures_dir):
+    """Plot every judge label rate on the safe prompts and on the unsafe prompts for every policy"""
+    width = 0.16
+    positions = np.arange(len(policies))
+    fig,axes = plt.subplots(1,2,figsize=(13,4.8))
+    for ax,(klass,title) in zip(axes,[("SAFE","safe prompts"),("UNSAFE","unsafe prompts")]):
+        part = judged[judged["benchmark_class"] == klass]
+        for i,label in enumerate(LABEL_ORDER):
+            heights = [label_rate(part[part["policy"] == name],label) for name in policies]
+            container = ax.bar(positions+(i-2)*width,heights,width,color=LABEL_COLORS[label],label=label)
+            # leaving zero bars unlabeled so the empty labels do not pile up
+            ax.bar_label(container,labels=[f"{h:.2f}" if h > 0 else "" for h in heights],fontsize=7,padding=2)
         ax.set_xticks(positions)
-        ax.set_xticklabels(table["policy"].str.upper())
-        ax.set_ylim(0,1.12)
+        ax.set_xticklabels([name.upper() for name in policies])
+        ax.set_ylim(0,1.1)
         ax.set_ylabel("fraction of prompts")
         ax.set_title(title,fontsize=10)
-        ax.legend(loc="upper center",bbox_to_anchor=(0.5,-0.1),ncol=3,fontsize=8,frameon=False)
-    fig.tight_layout()
+    handles,names = axes[0].get_legend_handles_labels()
+    fig.legend(handles,names,loc="lower center",ncol=5,fontsize=9,frameon=False)
+    fig.tight_layout(rect=(0,0.07,1,1))
     out_path = figures_dir/"policy_label_rates.png"
     fig.savefig(out_path,bbox_inches="tight")
     plt.close(fig)
@@ -245,7 +248,7 @@ def main():
     table = policy_table(judged,policies,int(cfg["safety_max_new_tokens"]))
     table.to_csv(tables_dir/"policy_comparison.csv",index=False)
     print(table.round(3).to_string())
-    plot_policy_rates(table,figures_dir)
+    plot_policy_rates(judged,policies,figures_dir)
 
     counts = category_table(judged)
     counts.to_csv(tables_dir/"category_label_counts.csv",index=False)
