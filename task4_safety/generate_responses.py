@@ -7,6 +7,8 @@ from common.data import load_yaml, repo_path, write_jsonl
 from common.generation import batch_generate
 from common.models import clear_gpu, load_policy, load_tokenizer
 
+GENERATION_BATCH_SIZE = 16
+
 
 def policy_specs(cfg):
     return {
@@ -72,7 +74,7 @@ def main():
         if out_path.exists():
             print(f"{name}: already generated")
             continue
-        records = generate_for_policy(cfg,name)
+        records = generate_for_policy(cfg,name,GENERATION_BATCH_SIZE)
         write_jsonl(out_path,records)
         mean_tokens = sum(r["response_tokens"] for r in records)/len(records)
         print(f"{name}: {len(records)} responses with mean length {mean_tokens:.1f} tokens")
