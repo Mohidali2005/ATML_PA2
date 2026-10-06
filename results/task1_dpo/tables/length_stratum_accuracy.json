@@ -1,12 +1,12 @@
 {
   "standard": {
-    "preferred_longer": 0.10975609756097561,
-    "length_matched": 0.5975609756097561,
-    "rejected_longer": 0.9634146341463414
+    "preferred_longer": 0.1282051282051282,
+    "length_matched": 0.6,
+    "rejected_longer": 0.9620253164556962
   },
   "length_balanced": {
-    "preferred_longer": 0.10975609756097561,
-    "length_matched": 0.5975609756097561,
-    "rejected_longer": 0.9634146341463414
+    "preferred_longer": 0.1282051282051282,
+    "length_matched": 0.6,
+    "rejected_longer": 0.9620253164556962
   }
 }
