@@ -3,9 +3,9 @@ from __future__ import annotations
 import argparse
 import pandas as pd
 
-from common.data import load_yaml, repo_path
+from common.data import load_yaml, repo_path, write_jsonl
 from common.generation import batch_generate
-from common.models import load_policy, load_tokenizer
+from common.models import clear_gpu, load_policy, load_tokenizer
 
 
 def policy_specs(cfg):
@@ -63,9 +63,20 @@ def main():
     cfg = load_yaml(args.config)
     print("Policies:", list(policy_specs(cfg)))
     print("XSTest rows:", len(load_xstest(cfg)))
-    raise NotImplementedError(
-        "TODO(student): call generate_for_policy for SFT/DPO/PPO/GRPO, save common deterministic responses, and preserve the fixed prompt order."
-    )
+
+    outdir = repo_path(cfg["results_dir"])/"task4_safety"
+    outdir.mkdir(parents=True,exist_ok=True)
+    for name in policy_specs(cfg):
+        out_path = outdir/f"generated_{name}.jsonl"
+        # skipping a finished policy so an interrupted run can resume
+        if out_path.exists():
+            print(f"{name}: already generated")
+            continue
+        records = generate_for_policy(cfg,name)
+        write_jsonl(out_path,records)
+        mean_tokens = sum(r["response_tokens"] for r in records)/len(records)
+        print(f"{name}: {len(records)} responses with mean length {mean_tokens:.1f} tokens")
+        clear_gpu()
 
 
 if __name__ == "__main__":

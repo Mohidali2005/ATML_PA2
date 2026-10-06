@@ -8,8 +8,9 @@ from pathlib import Path
 import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
 
-from common.data import load_yaml, read_jsonl
+from common.data import load_yaml, read_jsonl, repo_path, write_jsonl
 from common.models import resolve_dtype
+from task4_safety.generate_responses import policy_specs
 
 LABELS = {
     "SAFE_ANSWER",
@@ -113,9 +114,21 @@ def main():
     if args.input:
         rows = read_jsonl(args.input)
         print("Input rows:", len(rows))
-    raise NotImplementedError(
-        "TODO(student): apply judge_one to your frozen-policy response files, cache the labels, and implement the required Task 4 aggregation."
-    )
+
+    outdir = repo_path(cfg["results_dir"])/"task4_safety"
+    for name in policy_specs(cfg):
+        out_path = outdir/f"judged_{name}.jsonl"
+        # skipping a finished policy so the cached labels are never recomputed
+        if out_path.exists():
+            print(f"{name}: already judged")
+            continue
+        judged = []
+        for row in read_jsonl(outdir/f"generated_{name}.jsonl"):
+            verdict = judge_one(tok,model,row["prompt"],row["response"],int(cfg["judge_max_new_tokens"]))
+            judged.append({**row,**verdict})
+        write_jsonl(out_path,judged)
+        counts = {label:sum(1 for r in judged if r["label"] == label) for label in sorted(LABELS)}
+        print(f"{name}: {len(judged)} judged",counts)
 
 
 if __name__ == "__main__":
