@@ -1,0 +1,4 @@
+policy,n,exact_accuracy,format_compliance,mean_response_tokens,truncated_rate,wrong_number_rate,missing_final_rate
+sft,100,0.42,0.55,163.35,0.0,0.13,0.45
+rlvr,100,0.46,0.58,164.41,0.0,0.12,0.42
+rlaif,100,0.48,0.62,164.32,0.0,0.14,0.38

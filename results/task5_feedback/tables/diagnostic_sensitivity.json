@@ -1,0 +1,10 @@
+{
+  "s_reason_verifier": 0.0,
+  "s_reason_judge": 0.0,
+  "s_outcome_verifier": 1.0,
+  "s_outcome_judge": 0.0,
+  "s_outcome_pooled_verifier": 1.0,
+  "s_outcome_pooled_judge": 0.09999999999999999,
+  "judge_calls_made": 200,
+  "judge_seconds": 70.43833447899988
+}

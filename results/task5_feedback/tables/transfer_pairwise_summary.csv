@@ -1,0 +1,4 @@
+pair,n,first_win_rate,judge_tie_rate,agreement_all,n_verifier_split,judge_picks_correct,judge_tie_on_split,judge_picks_wrong
+rlaif_vs_sft,100,0.535,0.79,0.77,6,0.3333333333333333,0.6666666666666666,0.0
+rlvr_vs_sft,100,0.53,0.78,0.78,6,0.5,0.5,0.0
+rlaif_vs_rlvr,100,0.525,0.79,0.79,2,0.5,0.5,0.0

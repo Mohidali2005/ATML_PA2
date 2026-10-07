@@ -92,12 +92,15 @@ def pick_examples(cfg, records):
     """Pick pairs where the verifier and the judge disagree for the qualitative discussion
 
     Pairs where the judge is the one that gets it wrong come first because
-    they show what the judge can be fooled by
+    they show what the judge can be fooled by. A category with no disagreement
+    keeps its first pairs so the shared tie is still shown
     """
     groups = load_diagnostic_groups(cfg["paths"]["task5_diagnostics"])
     examples = []
     for category in EXAMPLE_CATEGORIES:
         part = [r for r in records if r["category"] == category and r["verifier"] != r["judge"]]
+        if not part:
+            part = [r for r in records if r["category"] == category]
         part.sort(key=lambda r: r["judge"] != "wrong")
         for r in part[:EXAMPLES_PER_CATEGORY]:
             variants = groups[r["problem_id"]]

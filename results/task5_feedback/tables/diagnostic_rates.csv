@@ -1,0 +1,11 @@
+category,mechanism,n,better_rate,tie_rate,wrong_rate
+reasoning,verifier,20,0.0,1.0,0.0
+reasoning,judge,20,0.0,1.0,0.0
+outcome,verifier,20,1.0,0.0,0.0
+outcome,judge,20,0.0,1.0,0.0
+filler,verifier,20,0.0,1.0,0.0
+filler,judge,20,0.0,0.75,0.25
+distractor,verifier,20,1.0,0.0,0.0
+distractor,judge,20,0.25,0.7,0.05
+corrupt_vs_wrong,verifier,20,1.0,0.0,0.0
+corrupt_vs_wrong,judge,20,0.05,0.95,0.0

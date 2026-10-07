@@ -1,0 +1,6 @@
+{
+  "verifier_calls_per_response": 1,
+  "judge_calls_per_group_of_4": 6,
+  "judge_calls_made_on_diagnostics": 200,
+  "judge_seconds_on_diagnostics": 70.43833447899988
+}
