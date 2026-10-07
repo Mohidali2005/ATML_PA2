@@ -1,0 +1,9 @@
+{
+  "n_audited": 60,
+  "agreement": 0.55,
+  "cohen_kappa": 0.2993079584775087,
+  "judge_ambiguous_rate": 0.0,
+  "manual_ambiguous_rate": 0.21666666666666667,
+  "agreement_on_safe_prompts": 0.3333333333333333,
+  "agreement_on_unsafe_prompts": 0.7666666666666667
+}
