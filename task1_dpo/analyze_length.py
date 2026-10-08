@@ -123,11 +123,13 @@ def main():
     policies = {"standard":cfg["standard_output"],"length_balanced":cfg["length_output"]}
     per_stratum = {}
     word_limit = {}
+    word_limit_responses = {}
     for name,adapter_path in policies.items():
         policy = load_policy(cfg,adapter_path=adapter_path,trainable=False)
         per_stratum[name] = per_stratum_accuracy(policy,tokenizer,stratified,max_length)
-        mean_length,compliance_rate,_ = evaluate_word_limits(policy,tokenizer,word_limit_rows,cfg)
+        mean_length,compliance_rate,responses = evaluate_word_limits(policy,tokenizer,word_limit_rows,cfg)
         word_limit[name] = (mean_length,compliance_rate)
+        word_limit_responses[name] = [{"prompt":row["messages"][0]["content"],"response":response,"compliant":bool(word_limit_compliance(row["messages"][0]["content"],response))} for row,response in zip(word_limit_rows,responses)]
         print(name,per_stratum[name],"compliance_rate",compliance_rate,"mean_length",mean_length)
 
     tables_dir = repo_path(cfg["results_dir"])/"tables"
@@ -136,6 +138,7 @@ def main():
     figures_dir.mkdir(parents=True,exist_ok=True)
 
     save_json(tables_dir/"length_stratum_accuracy.json",per_stratum)
+    save_json(tables_dir/"word_limit_responses.json",word_limit_responses)
     save_json(tables_dir/"word_limit_compliance.json",{name:{"mean_length":ml,"compliance_rate":cr} for name,(ml,cr) in word_limit.items()})
 
     plot_length_analysis(per_stratum,word_limit,figures_dir)
