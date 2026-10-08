@@ -10,7 +10,7 @@ from common.generation import batch_generate, response_sequence_logprobs
 from common.logging_utils import save_json
 from common.metrics import word_limit_compliance
 from common.models import load_policy, load_tokenizer
-from task1_dpo.train import fitting_rows, make_collate, run_training
+from task1_dpo.train import fitting_rows, make_collate, pair_logprobs, run_training
 
 MODEL_COLORS = {"standard":"steelblue","length_balanced":"darkorange"}
 STRATA = ["preferred_longer","length_matched","rejected_longer"]
@@ -33,9 +33,9 @@ def per_stratum_accuracy(policy, tokenizer, rows, max_length):
         for chosen,rejected in loader:
             chosen = {k:v.to(device) for k,v in chosen.items()}
             rejected = {k:v.to(device) for k,v in rejected.items()}
-            policy_chosen_logp,_,_ = response_sequence_logprobs(policy,chosen)
-            policy_rejected_logp,_,_ = response_sequence_logprobs(policy,rejected)
-            correct.extend((policy_chosen_logp > policy_rejected_logp).tolist())
+            policy_chosen_logp,policy_rejected_logp,ref_chosen_logp,ref_rejected_logp = pair_logprobs(policy,chosen,rejected)
+            margin = (policy_chosen_logp - policy_rejected_logp) - (ref_chosen_logp - ref_rejected_logp)
+            correct.extend((margin > 0).tolist())
 
     by_stratum = {stratum:[] for stratum in STRATA}
     for row,is_correct in zip(rows,correct):
