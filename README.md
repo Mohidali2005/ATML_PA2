@@ -116,6 +116,8 @@ The judge loader/parser are supplied. You must implement the requested generatio
 python -m task4_safety.generate_responses --config configs/feedback.yaml
 python -m task4_safety.judge_responses --config configs/feedback.yaml
 python -m task4_safety.make_audit_sheet --config configs/feedback.yaml
+python -m task4_safety.build_audit_sheet --config configs/feedback.yaml
+# fill the manual_label column of results/task4_safety/manual_audit_sheet.csv by hand, then run
 python -m task4_safety.evaluate_safety --config configs/feedback.yaml
 ```
 
@@ -139,3 +141,30 @@ python -m task5_feedback.compare_feedback --config configs/feedback.yaml
 - Record peak VRAM and wall-clock time for the standard PPO and GRPO continuations.
 
 See the assignment manual for the required experiments, metrics, and report questions.
+
+## 7. Submission notes
+
+### What was implemented
+
+- Task 1: DPO training loop, held out evaluation, beta sweep, and the length confounding study (`task1_dpo/`).
+- Task 2: PPO continuation loop, held out evaluation, cached batch clipping study, clipping forks, and KL forks (`task2_ppo/`).
+- Task 3: GRPO continuation loop, held out evaluation, group size study, and canonical versus Dr. GRPO comparison (`task3_grpo/`).
+- Task 4: response generation, judging, audit sheet construction, and aggregate safety analysis (`task4_safety/`).
+- Task 5: in domain and transfer evaluation, diagnostic set scoring, and feedback source comparison (`task5_feedback/`).
+
+### Corrected objective defects
+
+- `task1_dpo/dpo.py`: the DPO margin now subtracts the reference margin, `beta * (policy_margin - ref_margin)`.
+- `task2_ppo/ppo.py`: the clipped surrogate now uses `torch.minimum` instead of `torch.maximum`.
+- `task3_grpo/grpo.py`: `group_relative_advantages` now normalizes with the mean and standard deviation of each prompt's own group.
+
+### Report
+
+The report sources are in `report_latex/`. Figures are rebuilt from the saved result files with `python report_latex/make_figures.py`. The PDF is built with `pdflatex`, `bibtex`, `pdflatex`, `pdflatex` on `28100043_PA2_report.tex`.
+
+### Attribution
+
+- The starter repository, configurations, fixed datasets, cached rollouts, supplied checkpoints, the exact GSM8K verifier (`task5_feedback/rlvr.py`), the pairwise judge (`task5_feedback/rlaif.py`), and the safety judge loader, prompt, and parser (`task4_safety/judge_responses.py`) are course material and were not rewritten.
+- Public models are downloaded at runtime: Qwen2.5-1.5B-Instruct, Qwen2.5-0.5B-Instruct, Qwen2.5-3B-Instruct, and the UltraFeedback reward model `yavuz-ai/qwen2.5-1.5b-rm-ultrafeedback`.
+- Libraries used: PyTorch, Transformers, PEFT, TRL, bitsandbytes, pandas, matplotlib.
+- Coding assistance from an LLM (Claude Code) was used for implementation and for drafting the report. All code and results were reviewed, and every reported number traces to a file under `results/`.

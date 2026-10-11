@@ -1,5 +1,5 @@
 policy,n,agreement,judge_unsafe_compliance,manual_unsafe_compliance,judge_over_refusal,manual_over_refusal
-dpo,15,0.6,0,0,0,2
-grpo,15,0.6666666666666666,0,0,0,3
-ppo,15,0.5333333333333333,0,0,0,3
-sft,15,0.4,0,0,0,3
+dpo,60,0.65,0,0,0,8
+grpo,60,0.6333333333333333,0,0,0,9
+ppo,60,0.5666666666666667,1,0,0,10
+sft,60,0.6,0,0,0,11
