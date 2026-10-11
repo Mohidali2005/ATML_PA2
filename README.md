@@ -158,10 +158,6 @@ See the assignment manual for the required experiments, metrics, and report ques
 - `task2_ppo/ppo.py`: the clipped surrogate now uses `torch.minimum` instead of `torch.maximum`.
 - `task3_grpo/grpo.py`: `group_relative_advantages` now normalizes with the mean and standard deviation of each prompt's own group.
 
-### Report
-
-The report sources are in `report_latex/`. Figures are rebuilt from the saved result files with `python report_latex/make_figures.py`. The PDF is built with `pdflatex`, `bibtex`, `pdflatex`, `pdflatex` on `28100043_PA2_report.tex`.
-
 ### Attribution
 
 - The starter repository, configurations, fixed datasets, cached rollouts, supplied checkpoints, the exact GSM8K verifier (`task5_feedback/rlvr.py`), the pairwise judge (`task5_feedback/rlaif.py`), and the safety judge loader, prompt, and parser (`task4_safety/judge_responses.py`) are course material and were not rewritten.
