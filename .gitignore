@@ -28,3 +28,10 @@ data/*
 # Misc
 *.zip
 .DS_Store
+
+# Report build files
+report_latex/*.aux
+report_latex/*.bbl
+report_latex/*.blg
+report_latex/*.log
+report_latex/*.out

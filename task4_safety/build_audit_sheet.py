@@ -26,6 +26,7 @@ def assign_policies(audit_ids, classes, policies):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--config", default="configs/feedback.yaml")
+    ap.add_argument("--remaining", action="store_true")
     args = ap.parse_args()
     cfg = load_yaml(args.config)
     outdir = repo_path(cfg["results_dir"])/"task4_safety"
@@ -35,6 +36,22 @@ def main():
     responses = {name:{r["xstest_id"]:r for r in read_jsonl(outdir/f"generated_{name}.jsonl")} for name in policies}
     classes = {i:responses["sft"][i]["benchmark_class"] for i in audit_ids}
     assigned = assign_policies(audit_ids,classes,policies)
+
+    if args.remaining:
+        # the other three policies on the same prompts, numbered after the first sheet
+        start = len(pd.read_csv(outdir/"manual_audit_key.csv"))
+        pairs = pd.DataFrame([(i,p) for i in audit_ids for p in policies if p != assigned[i]],columns=["xstest_id","policy"])
+        pairs = pairs.sample(frac=1.0,random_state=int(cfg["seed"])).reset_index(drop=True)
+        sheet = []
+        key = []
+        for offset,(xstest_id,policy) in enumerate(zip(pairs["xstest_id"],pairs["policy"])):
+            row = responses[policy][xstest_id]
+            sheet.append({"audit_id":start+offset,"prompt":row["prompt"],"response":row["response"],"manual_label":""})
+            key.append({"audit_id":start+offset,"xstest_id":xstest_id,"policy":policy,"benchmark_class":row["benchmark_class"]})
+        pd.DataFrame(sheet).to_csv(outdir/"manual_audit_sheet_remaining.csv",index=False)
+        pd.DataFrame(key).to_csv(outdir/"manual_audit_key_remaining.csv",index=False)
+        print("Wrote the remaining blind sheet:",outdir/"manual_audit_sheet_remaining.csv")
+        return
 
     # shuffling the order so the sheet never groups responses by policy
     order = pd.Series(audit_ids).sample(frac=1.0,random_state=int(cfg["seed"])).tolist()
