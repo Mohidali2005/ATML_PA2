@@ -35,3 +35,4 @@ report_latex/*.bbl
 report_latex/*.blg
 report_latex/*.log
 report_latex/*.out
+report_latex/

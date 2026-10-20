@@ -24,7 +24,7 @@ task1_dpo/ ... task5_feedback/
 data/ cached/ checkpoints/ manifests/    course assets, downloaded and not tracked
 outputs/            trained adapters, not tracked
 results/            JSON and CSV logs, generated responses, tables and figures
-report_latex/       report source (LaTeX), figures and compiled PDF
+28100043_PA2_report.pdf    compiled report
 ```
 
 ## Setup
@@ -106,16 +106,6 @@ python -m task5_feedback.score_perturbations --config configs/feedback.yaml
 python -m task5_feedback.evaluate_math --config configs/feedback.yaml --dataset transfer
 python -m task5_feedback.compare_feedback --config configs/feedback.yaml
 ```
-
-### Report
-
-```bash
-cd report_latex
-python make_figures.py
-bash build.sh
-```
-
-Figures are rebuilt from the files in `results/`.
 
 ## Implementation notes
 
