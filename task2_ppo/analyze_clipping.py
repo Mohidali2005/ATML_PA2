@@ -26,8 +26,8 @@ def load_cached_rollouts(path):
     if not isinstance(rows, list) or not rows:
         raise ValueError("Expected a non-empty list in the supplied PPO rollout cache")
 
-    # Instructor iterations used two equivalent names for these fields. Normalize once here so
-    # the student analysis code sees one stable interface.
+    # the cached rows can store the log probabilities under two equivalent field names
+    # mapping both onto one name here so the rest of the analysis reads a single interface
     normalized = []
     for row in rows:
         row = dict(row)

@@ -21,7 +21,8 @@ def load_k8_cache(path):
     by_prompt = defaultdict(list)
     for row in rows:
         by_prompt[str(row["source_index"])].append(row)
-    # Instructor cache has 8 rows per prompt, one row per completion.
+    # each prompt is expected to carry at least 8 cached rows
+    # with one row per sampled completion
     bad = {pid: len(group) for pid, group in by_prompt.items() if len(group) < 8}
     if bad:
         raise ValueError(f"Expected at least K=8 cached completions per prompt; short groups: {bad}")
